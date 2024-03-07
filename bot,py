@@ -1,0 +1,43 @@
+import telegram
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+
+bot = telegram.Bot(token=TOKEN)
+
+def start(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Hello! I'm a bot. How can I assist you?")
+
+def echo(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text=update.message.text)
+
+def instagram(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Here is the Instagram URL: https://www.instagram.com/your_instagram_username/")
+
+def business_website(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Here is the business website URL: https://www.yourbusinesswebsite.com/")
+
+def additional_urls(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Here are some additional URLs:\n1. https://example.com\n2. https://example2.com")
+
+def unknown(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Sorry, I didn't understand that command.")
+
+updater = Updater(token=TOKEN, use_context=True)
+dispatcher = updater.dispatcher
+
+start_handler = CommandHandler('start', start)
+echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
+instagram_handler = CommandHandler('instagram', instagram)
+business_website_handler = CommandHandler('website', business_website)
+additional_urls_handler = CommandHandler('urls', additional_urls)
+unknown_handler = MessageHandler(Filters.command, unknown)
+
+dispatcher.add_handler(start_handler)
+dispatcher.add_handler(echo_handler)
+dispatcher.add_handler(instagram_handler)
+dispatcher.add_handler(business_website_handler)
+dispatcher.add_handler(additional_urls_handler)
+dispatcher.add_handler(unknown_handler)
+
+updater.start_polling()
